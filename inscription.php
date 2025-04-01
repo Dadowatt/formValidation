@@ -1,33 +1,37 @@
 <?php
 session_start();
-require "config.php";
+require 'config.php'; // Connexion à la base de données
 include "framework.php";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nom = $_POST['nom'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-  $nom = $_POST['nom'];
-  $email = $_POST['email'];
-  $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    // ✅ Vérifier si l'email existe déjà
+    $checkEmail = "SELECT * FROM users WHERE email = ?";
+    $stmt = $conn->prepare($checkEmail);
+    $stmt->execute([$email]);
 
-  $emailExist = "SELECT id FROM users WHERE email = ?";
-  $requete = $conn->prepare($emailExist);
-  $requete->execute([$email]);
+    if ($stmt->rowCount() > 0) {
+        $_SESSION['error'] = "Cet email est déjà utilisé. Veuillez en choisir un autre.";
+        header("Location: inscription.php"); // Redirige vers l'inscription
+        exit();
+    }
 
-  if($requete->rowCount() > 0){
-    $_SESSION['error'] = "cet email existe déjà";
-    header('Location: inscription.php');
-    exit();
-  }else{
+    // ✅ Insérer le nouvel utilisateur si l'email n'existe pas
     $requete = "INSERT INTO users (nom, email, password) VALUES (?, ?, ?)";
     $query = $conn->prepare($requete);
-    $query->execute([
-      $nom, $email, $password
-    ]);
-    $_SESSION['message'] = "inscription réussie! connectez-vous";
-    header('Location: connexion.php');
+    $query->execute([$nom, $email, $password]);
+
+    // ✅ Ajouter un message de succès
+    $_SESSION['message'] = "Inscription réussie ! Connectez-vous maintenant.";
+    
+    // ✅ Rediriger vers connexion.php
+    header("Location: connexion.php");
     exit();
-  }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,12 +42,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 </head>
 <body>
 <div class="container mt-5">
-  <?php
-  if(isset($_SESSION['error'])){
-    echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error'] . "</div>";
-    unset($_SESSION['error']);
-  }
-  ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
+    <?php unset($_SESSION['error']); // Supprimer après affichage ?>
+<?php endif; ?>
+
 
 <form method="post" class="w-75 form-control bg-body-secondary">
   <div class="mb-3">

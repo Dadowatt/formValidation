@@ -1,29 +1,34 @@
 <?php
 session_start();
-require "config.php";
+require 'config.php'; // Connexion à la base de données
 include "framework.php";
-
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $requete = "SELECT id, password FROM users WHERE email = ?";
-$query = $conn->prepare($requete);
-$query->execute([$email]);
-$user = $query->fetch(PDO::FETCH_ASSOC); // ✅ Récupérer les données
 
-if ($user && password_verify($password, $user['password'])) {
-    $_SESSION['message'] = 'Connexion réussie, bienvenue!';
-    $_SESSION['user_id'] = $user['id']; // Stocker l'ID de l'utilisateur en session
-    header('Location: index.php');
-    exit();
-} else {
-    $_SESSION['error'] = "Email ou mot de passe incorrect";
-    header('Location: connexion.php');
-    exit();
-}
+    // Vérifier si l'utilisateur existe
+    $requete = "SELECT * FROM users WHERE email = ?";
+    $query = $conn->prepare($requete);
+    $query->execute([$email]);
+    $user = $query->fetch(PDO::FETCH_ASSOC);
 
+    if ($user && password_verify($password, $user['password'])) {
+        // ✅ Stocker l'utilisateur en session
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_nom'] = $user['nom'];
+        $_SESSION['message'] = "Connexion réussie, bienvenue " . $user['nom'] . " 🎉";
+
+        // ✅ Redirection vers index.php
+        header("Location: index.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "Email ou mot de passe incorrect ❌";
+        header("Location: connexion.php");
+        exit();
+    }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,14 +38,18 @@ if ($user && password_verify($password, $user['password'])) {
     <title>Document</title>
 </head>
 <body>
-    <?php if(isset($_SESSION['message'])): ?>
-    <div class="alert alert-success" role="alert"> <?= $_SESSION['message']; ?> </div>
+
+<?php if (isset($_SESSION['message'])): ?>
+    <div class="alert alert-success"><?= $_SESSION['message']; ?></div>
     <?php unset($_SESSION['message']); ?>
-    <?php endif; ?>
-    <?php if(isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger" role="alert"> <?= $_SESSION['error']; ?> </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
     <?php unset($_SESSION['error']); ?>
-    <?php endif; ?>
+<?php endif; ?>
+
+
         
     <form method="post" class="form-control w-25 p-4 bg-body-secondary mx-auto mt-4">
         <div class="mb-3">
