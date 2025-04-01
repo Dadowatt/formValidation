@@ -2,10 +2,8 @@
 session_start();
 require "config.php"; // Connexion à la base de données
 include "framework.php"; // Inclure d'autres fichiers nécessaires
-
-// ✅ Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header("Location: connexion.php"); // Redirige si non connecté
+    header("Location: connexion.php"); // Redirection vers la connexion si non connecté
     exit();
 }
 ?>
@@ -21,14 +19,12 @@ if (!isset($_SESSION['user_id'])) {
 <body>
 
 <div class="container mt-4">
-    <?php if (isset($_SESSION['message'])): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($_SESSION['message']); ?></div>
-        <?php unset($_SESSION['message']); // ✅ Supprimer après affichage ?>
-    <?php endif; ?>
-
-    <h1>Bienvenue, <?= isset($_SESSION['user_nom']) ? htmlspecialchars($_SESSION['user_nom']) : "Utilisateur"; ?> 🎉</h1>
-    
-    <a href="logout.php" class="btn btn-danger">Déconnexion</a>
+    <?php
+if (isset($_SESSION['message'])) {
+        echo "<div class='alert alert-success'>" . $_SESSION['message'] . "</div>";
+        unset($_SESSION['message']); // Supprimer après affichage
+    }
+    ?>
 
     <div class="card mt-3" style="width: 18rem;">
         <div class="card-header">

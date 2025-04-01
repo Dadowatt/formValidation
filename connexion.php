@@ -15,14 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($password, $user['password'])) {
         // ✅ Stocker l'utilisateur en session
         $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_nom'] = $user['nom'];
-        $_SESSION['message'] = "Connexion réussie, bienvenue " . $user['nom'] . " 🎉";
+        $_SESSION['message'] = "Connexion réussie, bienvenue ";
 
         // ✅ Redirection vers index.php
         header("Location: index.php");
         exit();
     } else {
-        $_SESSION['error'] = "Email ou mot de passe incorrect ❌";
+        $_SESSION['error'] = "Email ou mot de passe incorrect ";
         header("Location: connexion.php");
         exit();
     }

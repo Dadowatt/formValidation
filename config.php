@@ -4,6 +4,6 @@ try{
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "connexion réussie";
 }catch(PDOEXCEPTION $e){
-    die("erreur de connexion " .$e->getMessage());
+    die("erreur de connexion " . $e->getMessage());
 }
 ?>
