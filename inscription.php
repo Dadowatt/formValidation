@@ -42,29 +42,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="container mt-5">
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="alert alert-success"><?= $_SESSION['message']; ?></div>
+        <?php unset($_SESSION['message']); ?>
+    <?php endif; ?>
 
-<?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
-    <?php unset($_SESSION['error']); // Supprimer après affichage ?>
-<?php endif; ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
 
-
-<form method="post" class="w-75 form-control bg-body-secondary">
-  <div class="mb-3">
-    <label for="nom" class="form-label">Nom</label>
-    <input type="text" class="form-control" name="nom" required>
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Email</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" required>
-    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
-  </div>
-  <button type="submit" class="btn btn-primary">S'inscrire</button>
-</form>
+    <form method="post" class="form-control w-50 p-4 mx-auto mt-4 bg-primary-subtle">
+        <h3 class="text-center">Inscription</h3>
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom</label>
+            <input type="text" name="nom" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Mot de passe</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary fw-bold">S'inscrire</button>
+        </div>
+    </form>
 </div>
 </body>
 </html>

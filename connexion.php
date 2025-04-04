@@ -37,31 +37,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Document</title>
 </head>
 <body>
+<div class="container mt-5">
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="alert alert-success"><?= $_SESSION['message']; ?></div>
+        <?php unset($_SESSION['message']); ?>
+    <?php endif; ?>
 
-<?php if (isset($_SESSION['message'])): ?>
-    <div class="alert alert-success"><?= $_SESSION['message']; ?></div>
-    <?php unset($_SESSION['message']); ?>
-<?php endif; ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
 
-<?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger"><?= $_SESSION['error']; ?></div>
-    <?php unset($_SESSION['error']); ?>
-<?php endif; ?>
-
-
-        
-    <form method="post" class="form-control w-25 p-4 bg-body-secondary mx-auto mt-4">
+    <form method="post" class="form-control w-50 p-4 mx-auto mt-4 bg-primary-subtle">
+        <h3 class="text-center">Connexion</h3>
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" name="email" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
+            <label for="password" class="form-label">Mot de passe</label>
             <input type="password" name="password" class="form-control" required>
         </div>
-        <div class="mb-3 text-center">
-        <button type="submit" class="btn btn-primary px-3 fw-bold">Login</button>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary fw-bold">Se connecter</button>
         </div>
     </form>
+</div>
 </body>
 </html>
