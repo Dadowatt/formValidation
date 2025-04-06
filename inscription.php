@@ -3,8 +3,9 @@ session_start();
 require 'config.php'; // Connexion à la base de données
 include "framework.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = $_POST['nom'];
-    $email = $_POST['email'];
+    $nom = trim($_POST['nom']);
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
     // ✅ Vérifier si l'email existe déjà
@@ -31,8 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

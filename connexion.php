@@ -3,8 +3,8 @@ session_start();
 require 'config.php'; // Connexion à la base de données
 include "framework.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
     // Vérifier si l'utilisateur existe
     $requete = "SELECT * FROM users WHERE email = ?";
@@ -27,8 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
